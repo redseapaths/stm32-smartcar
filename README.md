@@ -91,7 +91,7 @@ VERSIONS.md                  版本台账（v0.0.1 → v2.0.0）
 
 **环境**：Keil MDK 5（ARM Compiler V6）+ STM32F1xx_DFP 设备包。
 
-1. 打开 `代码/analog.uvprojx`（工程已配好：源码 `..\analog\analog_route.c`、启动文件在 `RTE\`）；
+1. 打开 `代码/analog.uvprojx`（工程已配好：源码 `.\analog\analog_route.c`、启动文件在 `RTE\`）；
 2. 首次打开如果提示缺 Device 组件，装一下 Pack Installer 里的 `Keil::STM32F1xx_DFP`；
 3. F7 编译 → 输出 `Objects/analog/analog.hex`；
 4. ST-Link（SWD：3.3V / GND / SWDIO→PA13 / SWCLK→PA14）下载，或直接烧 `固件/analog.hex`。
@@ -120,10 +120,5 @@ Target 的优化等级是 `-O0`（赛前不优化，方便单步调试；改 `-O
 以及 `LEGS[]` 路线表。
 
 ## 八、许可
-
-Keil MDK 5 + ARM Compiler V6，新建工程、加入 `analog_route.c` 与 CMSIS/启动文件即可，
-详见 `文档/烧录与工程搭建指南.md`。工程编译后 Code ≈ 18.5KB（Flash 64KB 的 29%）。
-
-## 七、许可
 
 个人/学习用途自由使用。代码按「2026 校赛参赛版」冻结，赛前未做任何未经验证的改动。
