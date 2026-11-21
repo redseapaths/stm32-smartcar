@@ -87,7 +87,39 @@ VERSIONS.md                  版本台账（v0.0.1 → v2.0.0）
    `WHEEL_MIN 150` 顶回，实际可用差速只剩 270，等于"打不出方向"，出口 3–4cm 就丢线。
 6. **串口中文乱码**：源文件是 UTF-8，串口助手按 GBK 解 → 固件串口输出一律用 ASCII。
 
-## 六、编译
+## 六、编译与烧录
+
+**环境**：Keil MDK 5（ARM Compiler V6）+ STM32F1xx_DFP 设备包。
+
+1. 打开 `代码/analog.uvprojx`（工程已配好：源码 `..\analog\analog_route.c`、启动文件在 `RTE\`）；
+2. 首次打开如果提示缺 Device 组件，装一下 Pack Installer 里的 `Keil::STM32F1xx_DFP`；
+3. F7 编译 → 输出 `Objects/analog/analog.hex`；
+4. ST-Link（SWD：3.3V / GND / SWDIO→PA13 / SWCLK→PA14）下载，或直接烧 `固件/analog.hex`。
+
+编译结果参考：`Code=18,552 B · RO=4,256 B · RW=32 B · ZI=1,704 B`（Flash 64KB 的 29%、RAM 20KB 的 8%）。
+Target 的优化等级是 `-O0`（赛前不优化，方便单步调试；改 `-O1` 能再省 ~2KB，但要重标 PID）。
+
+**串口**：PA9(TX) → USB-TTL 的 RXD，115200 8N1。上电后可用单字符命令：
+
+| 键 | 作用 |
+|---|---|
+| `g` | 立刻开始跑（否则 1 秒后自动开始） |
+| `c` | 打印 8 路原始值 + 白度 + 偏差，用于现场标定 |
+| `t` | 电机自检（LEFT / RIGHT / BOTH 各 1.2 秒，打印各自里程） |
+| `k` | 重新做模拟量标定（蓝底 + 白线两步） |
+| `s18` / `o18` | 从第 18 段跑到尾 / 只跑第 18 段 |
+| `xx` | 600ms 内连按两次 `x` 紧急停车 |
+
+## 七、预编译固件
+
+`固件/analog.hex` 就是校赛 1:35 那一版（v2.0.0，与 `代码/analog/analog_route.c` 完全对应），
+可以直接用 ST-Link Utility / Keil / STM32CubeProgrammer 烧进板子，不需要编译。
+
+⚠️ 换到自己的车上前必须先改这几个参数并重新标定：`ENC_PER_CM`（编码器计数/厘米）、
+`WHEEL_BASE_CM`（轮距）、`TURN_SCALE`（原地转系数，实测法见 `文档/烧录与工程搭建指南.md`）、
+以及 `LEGS[]` 路线表。
+
+## 八、许可
 
 Keil MDK 5 + ARM Compiler V6，新建工程、加入 `analog_route.c` 与 CMSIS/启动文件即可，
 详见 `文档/烧录与工程搭建指南.md`。工程编译后 Code ≈ 18.5KB（Flash 64KB 的 29%）。
